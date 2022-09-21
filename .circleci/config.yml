@@ -175,7 +175,7 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
+            aws ec2 describe-instances --region us-west-2 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
 
       - persist_to_workspace:
           root: ~/
@@ -200,7 +200,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
+            aws ec2 describe-instances --region us-west-2 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       # Here's where you will add some code to rollback on failure      
@@ -214,7 +214,7 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            export TYPEORM_HOST=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export TYPEORM_HOST=$(aws ec2 describe-instances --region us-west-2 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             cd backend
             npm install
             npm run premigrations
@@ -235,7 +235,7 @@ jobs:
       - run:
           name: Deploy Frontend
           command: |
-            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances --region us-west-2 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
              echo "API_URL=http://$BACKEND_PUBLIC_IP:3030" 
             # Build the frontend
             cd frontend
@@ -257,7 +257,7 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            export TYPEORM_HOST=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export TYPEORM_HOST=$(aws ec2 describe-instances --region us-west-2 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo $TYPEORM_HOST >> .circleci/ansible/inventory.txt
 
             cd backend
@@ -278,7 +278,7 @@ jobs:
       - run:
           name: Backend smoke test.
           command: |
-            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances --region us-west-2 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             
             # URL="http://$BACKEND_PUBLIC_IP:3030/api/status"
             URL="http://g00gle.com"
