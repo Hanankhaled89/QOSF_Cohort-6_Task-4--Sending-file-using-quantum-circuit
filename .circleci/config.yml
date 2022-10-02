@@ -189,7 +189,8 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: ["54:03:09:2e:fd:b3:04:d1:99:84:99:a1:fd:4a:41:06"]
+          fingerprints: ["19:ce:6b:9b:ae:8b:cb:d6:b8:15:36:21:87:f6:f3:05"]
+          #fingerprints: ["54:03:09:2e:fd:b3:04:d1:99:84:99:a1:fd:4a:41:06"]
       # - run:
       #     name: "Install Dependencies"
       #     command: |
@@ -200,7 +201,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
-            #aws ec2 describe-instances --region us-west-2 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
+            aws ec2 describe-instances --region us-west-2 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> inventory.txt
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       # Here's where you will add some code to rollback on failure      
